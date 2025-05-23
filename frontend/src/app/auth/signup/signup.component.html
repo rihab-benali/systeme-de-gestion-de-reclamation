@@ -2,6 +2,15 @@
   <mat-card class="signup-card">
     <h2 class="signup-title">Create Account</h2>
     <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+      <!-- Name Field -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Full Name</mat-label>
+        <input matInput formControlName="name" />
+        <mat-error *ngIf="signupForm.get('name')?.hasError('required')">
+          Name is required
+        </mat-error>
+      </mat-form-field>
+
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Username</mat-label>
         <input matInput formControlName="username" />
@@ -18,6 +27,15 @@
         </mat-error>
         <mat-error *ngIf="signupForm.get('email')?.hasError('email')">
           Please enter a valid email
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Phone Field -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Phone Number</mat-label>
+        <input matInput type="tel" formControlName="phone" />
+        <mat-error *ngIf="signupForm.get('phone')?.hasError('required')">
+          Phone number is required
         </mat-error>
       </mat-form-field>
 
@@ -44,7 +62,6 @@
         mat-flat-button
         color="primary"
         class="signup-button"
-        [disabled]="signupForm.invalid"
       >
         Sign Up
       </button>

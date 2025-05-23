@@ -38,6 +38,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
+
         if (request.getRole() == Role.CLIENT) {
             AuthResponse response = authService.registerClient(request);
             return ResponseEntity.ok(response);
