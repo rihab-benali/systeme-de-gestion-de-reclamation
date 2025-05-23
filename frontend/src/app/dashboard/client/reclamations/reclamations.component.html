@@ -1,0 +1,32 @@
+<!-- src/app/dashboard/reclamations/reclamations.component.html -->
+<div style="padding: 16px">
+  <div
+    style="display: flex; justify-content: space-between; align-items: center"
+  >
+    <h2>My Reclamations</h2>
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="openNewReclamationDialog()"
+    >
+      Add New Reclamation
+    </button>
+  </div>
+
+  <table *ngIf="reclamations.length" style="width: 100%; margin-top: 20px">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let rec of reclamations">
+        <td>{{ rec.id }}</td>
+        <td>{{ rec.title }}</td>
+        <td>{{ rec.status }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

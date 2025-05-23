@@ -1,0 +1,21 @@
+<div style="padding: 16px">
+  <h2>My Reclamations</h2>
+  <button mat-raised-button color="primary">Create New Reclamation</button>
+
+  <table *ngIf="reclamations.length" style="width: 100%; margin-top: 20px">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let rec of reclamations">
+        <td>{{ rec.id }}</td>
+        <td>{{ rec.title }}</td>
+        <td>{{ rec.status }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
