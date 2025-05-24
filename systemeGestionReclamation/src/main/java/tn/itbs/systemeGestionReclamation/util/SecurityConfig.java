@@ -20,11 +20,11 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 import java.util.List;
-
+//annotation marks a class as a source of bean definitions.
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
+//annotation in Spring is a mechanism for dependency injection, allowing Spring to automatically wire beans
     @Autowired
     private CustomUserDetailsService userDetailsService;
 

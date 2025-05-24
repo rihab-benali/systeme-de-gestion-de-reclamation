@@ -59,7 +59,7 @@ public class ReclamationController {
         return reclamationService.getReclamationById(id).orElse(null);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+
     @PutMapping("/{id}")
     public Reclamation updateReclamation(@PathVariable Long id, @RequestBody Reclamation updatedReclamation) {
         return reclamationService.updateReclamation(id, updatedReclamation);

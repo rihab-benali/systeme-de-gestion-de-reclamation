@@ -17,18 +17,24 @@ public class AgentSAVController {
     @Autowired
     private AgentSAVService agentSAVService;
     @PreAuthorize("hasRole('ADMIN')")
+    //@GetMapping annotation is used for mapping HTTP GET requests
     @GetMapping
     public List<AgentSAV> getAllAgents() {
         return agentSAVService.getAllAgents();
     }
-
+//checks the given expression before entering the method
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}")
     public AgentSAV getAgentById(@PathVariable Long id) {
         return agentSAVService.getAgentById(id).orElse(null);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+   // @PreAuthorize("hasRole('ADMIN')")
+    //@PostMapping
+    //public AgentSAV createAgentWithUser(@RequestBody AddAgentRequest req) {
+        //return agentSAVService.createAgentWithUser(req);
+   // }
+
     @PostMapping
     public AgentSAV createAgent(@RequestBody AddAgentRequest req) {
         return agentSAVService.createAgentWithUser(req);
