@@ -27,14 +27,14 @@ import { AuthService } from '../auth/auth.service';
   styleUrls: ['./layout.component.scss'],
 })
 export class LayoutComponent implements OnInit {
-  userType: string = 'agent'; // Will be set from auth service
+  userType: string = ''; // Will be set from auth service
   navLinks: Array<{ icon: string; label: string; route: string }> = [];
 
   constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {
     // Get user type from auth service
-    this.userType = this.authService.getUserRole() || 'agent';
+    this.userType = this.authService.getUserRole()?.toLowerCase() || 'client';
     this.setNavLinks();
   }
 
@@ -75,7 +75,7 @@ export class LayoutComponent implements OnInit {
         ];
         break;
 
-      case 'agent':
+      case 'agent_sav':
         this.navLinks = [
           {
             icon: 'assignment_ind',
@@ -84,18 +84,8 @@ export class LayoutComponent implements OnInit {
           },
           {
             icon: 'list_alt',
-            label: 'Reclamations Logs',
+            label: 'Suivie Reclamations ',
             route: '/dashboard/logs',
-          },
-          {
-            icon: 'track_changes',
-            label: 'Follow-up',
-            route: '/dashboard/suivi',
-          },
-          {
-            icon: 'insert_chart',
-            label: 'Statistics',
-            route: '/dashboard/stats',
           },
         ];
         break;

@@ -4,32 +4,61 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class AuthService {
-  private userRole: string | null = null;
-  private authenticated = false;
+  private readonly TOKEN_KEY = 'authToken';
+  private readonly ROLE_KEY = 'userRole';
 
-  constructor() {
-    // Example: get user info from localStorage or cookie
-    this.authenticated = true;
-    this.userRole = 'client'; // This should be set based on actual authentication logic
-  }
+  constructor() {}
 
   isAuthenticated(): boolean {
-    return this.authenticated;
+    return !!this.getToken() && !this.isTokenExpired();
   }
 
   getUserRole(): string | null {
-    return this.userRole;
+    return localStorage.getItem(this.ROLE_KEY);
+  }
+
+  login(token: string, clientId : string, agentId: string): void {
+    const payload = this.decodeToken(token);
+    console.log(payload)
+    const role = payload?.role || null;
+    
+    localStorage.setItem(this.TOKEN_KEY, token);
+    if (role) {
+      localStorage.setItem(this.ROLE_KEY, role);
+    } 
+    if(clientId) localStorage.setItem('clientID', clientId)
+    if (agentId) localStorage.setItem('agentID', agentId)
   }
 
   logout(): void {
-    // Clear user session data
-    localStorage.removeItem('token');
-    localStorage.removeItem('userRole');
-    this.authenticated = false;
-    this.userRole = null;
-
-    // Optionally redirect or do other cleanup here
+    localStorage.removeItem(this.TOKEN_KEY);
+    localStorage.removeItem(this.ROLE_KEY);
   }
 
-  // Optionally add login or other auth methods here
+  getToken(): string | null {
+    return localStorage.getItem(this.TOKEN_KEY);
+  }
+
+  public decodeToken(token: string): any {
+    try {
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      return JSON.parse(atob(base64));
+    } catch (e) {
+      console.error('Error decoding token', e);
+      return null;
+    }
+  }
+
+  private isTokenExpired(): boolean {
+    const token = this.getToken();
+    if (!token) return true;
+
+    const payload = this.decodeToken(token);
+    if (!payload || !payload.exp) return true;
+
+    const expirationDate = new Date(0);
+    expirationDate.setUTCSeconds(payload.exp);
+    return expirationDate.valueOf() < new Date().valueOf();
+  }
 }
