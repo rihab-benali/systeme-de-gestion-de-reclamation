@@ -18,7 +18,7 @@ public class ReclamationController {
     @Autowired
     private ReclamationService reclamationService;
 
-    @PreAuthorize("hasRole('ADMIN')")
+
     @GetMapping
     public List<Reclamation> getAllReclamations() {
         return reclamationService.getAllReclamations();
@@ -63,6 +63,12 @@ public class ReclamationController {
     @PutMapping("/{id}")
     public Reclamation updateReclamation(@PathVariable Long id, @RequestBody Reclamation updatedReclamation) {
         return reclamationService.updateReclamation(id, updatedReclamation);
+    }
+
+    @DeleteMapping("my/{id}")
+    public ResponseEntity<?> DDeleteReclamation(@PathVariable Long id) {
+        reclamationService.deleteReclamation(id);
+        return ResponseEntity.ok().build();
     }
 
 }

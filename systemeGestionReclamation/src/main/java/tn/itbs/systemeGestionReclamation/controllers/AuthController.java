@@ -13,6 +13,7 @@ import tn.itbs.systemeGestionReclamation.beans.User;
 import tn.itbs.systemeGestionReclamation.beans.Role;
 import tn.itbs.systemeGestionReclamation.services.AuthService;
 import tn.itbs.systemeGestionReclamation.services.CustomUserDetailsService;
+import tn.itbs.systemeGestionReclamation.util.CustomUserDetails;
 import tn.itbs.systemeGestionReclamation.util.JwtUtil;
 import org.springframework.security.core.GrantedAuthority;
 import tn.itbs.systemeGestionReclamation.DTOs.RegisterRequest;
@@ -37,14 +38,9 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
-
-        if (request.getRole() == Role.CLIENT) {
-            AuthResponse response = authService.registerClient(request);
-            return ResponseEntity.ok(response);
-        }
-        // Optionally handle AGENT or ADMIN roles differently
-        return ResponseEntity.badRequest().body("Only CLIENT registration is allowed here.");
+    public ResponseEntity<?> registerClient(@RequestBody RegisterRequest request) {
+        AuthResponse response = authService.registerClient(request);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/login")
@@ -53,19 +49,27 @@ public class AuthController {
                 new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
         );
 
-        UserDetails userDetails = userDetailsService.loadUserByUsername(request.getUsername());
-        // Note: extractRoleFromUserDetails is not defined in JwtUtil; using a workaround
+        CustomUserDetails userDetails = (CustomUserDetails) userDetailsService.loadUserByUsername(request.getUsername());
+
         String role = userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .filter(auth -> auth.startsWith("ROLE_"))
                 .findFirst()
                 .map(auth -> auth.replace("ROLE_", ""))
                 .orElse("USER");
+
         String token = jwtUtil.generateToken(userDetails, role);
 
-        return ResponseEntity.ok(new AuthResponse(token));
+        // Return response based on role
+        return ResponseEntity.ok(new AuthResponse(
+                token,
+                role,
+                userDetails.getClientId(),  // Will be null for agents
+                userDetails.getAgentId()    // Will be null for clients
+        ));
     }
 }
+
 
 
 

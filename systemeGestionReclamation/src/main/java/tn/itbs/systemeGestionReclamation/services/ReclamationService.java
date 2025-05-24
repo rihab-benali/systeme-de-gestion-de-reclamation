@@ -104,7 +104,7 @@ public class ReclamationService {
         }).orElse(null);
     }
 //updated
-    public void adminDeleteReclamation(Long id) {
+    public void DDeleteReclamation(Long id) {
         reclamationRepository.deleteById(id);
     }
 }
